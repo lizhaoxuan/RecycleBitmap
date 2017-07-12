@@ -1,5 +1,7 @@
 package com.cake.recyclebitmap;
 
+import android.graphics.Bitmap;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -7,17 +9,17 @@ import java.util.Map;
  * Created by lizhaoxuan on 2017/7/12.
  */
 
-public abstract class AbstractReuseManager<T extends CakeBitmap> {
+public abstract class AbstractReuseStrategy<T extends CakeBitmap> {
 
     private Map<Integer, T> cakeMap;
 
-    abstract T OnSelector(MetaData metaData);
+    protected abstract T OnSelector(MetaData metaData);
 
-    abstract void put(T cakeBitmap, int uuid, boolean reuseSuccess);
+    protected abstract void put(Bitmap result, T cakeBitmap, int uuid, boolean reuseSuccess);
 
-    abstract void recycle(Object uuid);
+    protected abstract void recycle(int uuid);
 
-    void destroy() {
+    protected void destroy() {
         for (T cake : getCakeMap().values()) {
             if (cake != null) {
                 cake.bitmap = null;

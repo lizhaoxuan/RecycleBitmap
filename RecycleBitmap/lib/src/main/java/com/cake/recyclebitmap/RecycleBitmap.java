@@ -18,28 +18,41 @@ import java.util.Map;
  */
 
 public class RecycleBitmap {
+    public static final int REUSE_NO_CACHE_STRATEGY = 0;
+    public static final int REUSE_ONCE_CACHE_STRATEGY = 1;
+
     private static final String TAG = RecycleBitmap.class.getSimpleName();
 
-    private AbstractReuseManager reuseManager;
+    private AbstractReuseStrategy reuseStrategy;
 
     public static RecycleBitmap newInstance() {
-        return new RecycleBitmap(new DefaultReuseManager());
+        return newInstance(REUSE_ONCE_CACHE_STRATEGY);
     }
 
-    public static RecycleBitmap newInstance(AbstractReuseManager reuseManager) {
+    public static RecycleBitmap newInstance(int strategyType) {
+        switch (strategyType) {
+            case REUSE_NO_CACHE_STRATEGY:
+                return new RecycleBitmap(new ReuseNoCacheStrategy());
+            case REUSE_ONCE_CACHE_STRATEGY:
+            default:
+                return new RecycleBitmap(new ReuseOnceCacheStrategy());
+        }
+    }
+
+    public static RecycleBitmap newInstance(AbstractReuseStrategy reuseManager) {
         return new RecycleBitmap(reuseManager);
     }
 
-    public RecycleBitmap(AbstractReuseManager reuseManager) {
-        this.reuseManager = reuseManager;
+    private RecycleBitmap(AbstractReuseStrategy reuseManager) {
+        this.reuseStrategy = reuseManager;
     }
 
     public void recycle(int uuid) {
-        reuseManager.recycle(uuid);
+        reuseStrategy.recycle(uuid);
     }
 
     public void destroy() {
-        reuseManager.destroy();
+        reuseStrategy.destroy();
     }
 
 
@@ -57,22 +70,29 @@ public class RecycleBitmap {
     }
 
     public Bitmap createBitmap(Builder builder) {
-        CakeBitmap cakeBitmap = reuseManager.OnSelector(new MetaData(builder));
+        CakeBitmap cakeBitmap = reuseStrategy.OnSelector(new MetaData(builder));
+        if (cakeBitmap == null) {
+            cakeBitmap = new CakeBitmap(builder.getUuid());
+        }
         return createBitmap(cakeBitmap,
-                builder.getWidth(),
-                builder.getHeight(),
-                builder.getUuid(),
-                builder.isOverturn(),
+                createOptions(builder),
                 builder.getOnInputStream(),
+                builder.getUuid());
+    }
+
+    private BitmapFactory.Options createOptions(Builder builder) {
+        return Tools.getOptions(builder.getWidth(),
+                builder.getHeight(),
+                builder.isOverturn(),
+                builder.getOnInputStream().getInputStream(),
                 builder.getBitmapConfig());
     }
 
-    private Bitmap createBitmap(CakeBitmap cakeBitmap, int width, int height, int uuid, boolean overturn, OnInputStream onInputStream, Bitmap.Config bitmapConfig) {
+    private Bitmap createBitmap(CakeBitmap cakeBitmap, BitmapFactory.Options options, OnInputStream onInputStream, int uuid) {
         boolean reuseSuccess = true;
-
-        BitmapFactory.Options options = Tools.getOptions(width, height, overturn, onInputStream.getInputStream(), bitmapConfig);
         options.inBitmap = cakeBitmap.bitmap;
         Bitmap result;
+
         try {
             result = BitmapFactory.decodeStream(onInputStream.getInputStream(), null, options);
             if (result == null) {
@@ -90,14 +110,7 @@ public class RecycleBitmap {
             return null;
         }
 
-        if (reuseSuccess) {
-            cakeBitmap.bitmap = result;
-            reuseManager.put(cakeBitmap, uuid, true);
-        } else {
-            CakeBitmap newCake = new CakeBitmap(uuid);
-            newCake.bitmap = result;
-            reuseManager.put(newCake, uuid, false);
-        }
+        reuseStrategy.put(result, cakeBitmap, uuid, reuseSuccess);
 
         return result;
     }
