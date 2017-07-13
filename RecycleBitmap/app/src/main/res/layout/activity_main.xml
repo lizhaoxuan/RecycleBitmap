@@ -13,4 +13,10 @@
         android:layout_height="wrap_content"
         android:text="takePhotoBtn" />
 
+    <Button
+        android:id="@+id/seeBigBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="seeBigBtn" />
+
 </LinearLayout>

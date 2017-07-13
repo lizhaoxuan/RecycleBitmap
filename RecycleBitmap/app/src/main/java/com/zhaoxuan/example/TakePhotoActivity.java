@@ -28,7 +28,7 @@ public class TakePhotoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_photo);
-        recycleBitmap = RecycleBitmap.newInstance();
+        recycleBitmap = RecycleBitmap.newInstanceCustomerCache(2);
 
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
         File outputImage = new File(path, "oldTakePhoto.jpg");
@@ -36,7 +36,7 @@ public class TakePhotoActivity extends AppCompatActivity {
         photoImg = (ImageView) findViewById(R.id.photo_img);
         takeBtn = (Button) findViewById(R.id.take_btn);
 
-        recycleBitmap.setImageForViewOnPost(photoImg, new RecycleBitmap.Builder(photoImg)
+        recycleBitmap.setImageForViewOnPost(photoImg, new RecycleBitmap.MetaData(photoImg)
                 .needAsync(true)
                 .addSource(this, R.drawable.example));
 
@@ -59,7 +59,7 @@ public class TakePhotoActivity extends AppCompatActivity {
         o.inJustDecodeBounds = true;
 
         photoImg.setImageBitmap(recycleBitmap.createBitmap(
-                new RecycleBitmap.Builder(photoImg)
+                new RecycleBitmap.MetaData(photoImg)
                         .addSource(fileUri.getPath())));
     }
 }
