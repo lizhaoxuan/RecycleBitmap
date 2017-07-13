@@ -9,13 +9,13 @@ public class ReuseOnceCacheStrategy extends AbstractReuseStrategy<CakeBitmap> {
     private static final int RECYCLE_BITMAP_KEY = -1;
 
     @Override
-    public CakeBitmap OnSelector(MetaData metaData) {
+    public CakeBitmap OnSelector(RecycleBitmap.MetaData metaData) {
         CakeBitmap cakeBitmap = getCakeMap().get(metaData.getUuid());
         if (cakeBitmap == null) {
             //尝试利用最近废弃的一个CakeBitmap
             cakeBitmap = getCakeMap().get(RECYCLE_BITMAP_KEY);
             if (cakeBitmap == null) {
-                cakeBitmap = new CakeBitmap(metaData.getUuid());
+                cakeBitmap = new CakeBitmap(metaData);
             }
         }
         return cakeBitmap;
@@ -24,7 +24,7 @@ public class ReuseOnceCacheStrategy extends AbstractReuseStrategy<CakeBitmap> {
     @Override
     public void put(Bitmap result, CakeBitmap cakeBitmap, int uuid, boolean reuseSuccess) {
         if (reuseSuccess) {
-            cakeBitmap.bitmap = result;
+            cakeBitmap.setBitmap(result);
             getCakeMap().put(uuid, cakeBitmap);
             if (cakeBitmap.getKey() != uuid) {
                 //uuid不同，说明利用了以废弃的一个cakeBitmap,此时将其踢出Map
@@ -32,8 +32,7 @@ public class ReuseOnceCacheStrategy extends AbstractReuseStrategy<CakeBitmap> {
             }
         } else {
             //如果复用失败，将直接更新uuid的缓存
-            CakeBitmap newCake = new CakeBitmap(uuid);
-            newCake.bitmap = result;
+            CakeBitmap newCake = new CakeBitmap(result, uuid);
             getCakeMap().put(uuid, newCake);
         }
     }
@@ -42,6 +41,10 @@ public class ReuseOnceCacheStrategy extends AbstractReuseStrategy<CakeBitmap> {
     @Override
     public void recycle(int uuid) {
         CakeBitmap cakeBitmap = getCakeMap().get(uuid);
+
+        if (cakeBitmap == null) {
+            return;
+        }
         cakeBitmap.setKey(RECYCLE_BITMAP_KEY);
 
         getCakeMap().put(RECYCLE_BITMAP_KEY, cakeBitmap);

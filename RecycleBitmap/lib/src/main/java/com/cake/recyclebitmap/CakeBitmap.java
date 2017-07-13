@@ -9,11 +9,22 @@ import android.graphics.Bitmap;
 public class CakeBitmap {
 
     protected Bitmap bitmap;
+    protected int width;
+    protected int height;
 
     private int key;
 
-    public CakeBitmap(int key) {
-        this.key = key;
+    public CakeBitmap(RecycleBitmap.MetaData metaData) {
+        this.key = metaData.getUuid();
+        this.width = metaData.getRealWidth();
+        this.height = metaData.getRealHeight();
+    }
+
+    public CakeBitmap(Bitmap bitmap, int uuid) {
+        this.key = uuid;
+        this.width = bitmap.getWidth();
+        this.height = bitmap.getHeight();
+        this.bitmap = bitmap;
     }
 
     public void setKey(int key) {
@@ -22,5 +33,25 @@ public class CakeBitmap {
 
     public int getKey() {
         return key;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 }

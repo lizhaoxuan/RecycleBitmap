@@ -18,12 +18,24 @@ import java.util.Map;
  */
 
 public class RecycleBitmap {
-    public static final int REUSE_NO_CACHE_STRATEGY = 0;
-    public static final int REUSE_ONCE_CACHE_STRATEGY = 1;
+    public static final int REUSE_NO_CACHE_STRATEGY = -10;
+    public static final int REUSE_ONCE_CACHE_STRATEGY = -11;
 
     private static final String TAG = RecycleBitmap.class.getSimpleName();
 
     private AbstractReuseStrategy reuseStrategy;
+
+    public static RecycleBitmap newInstanceCustomerCache(int cacheNum) {
+        if (cacheNum <= 0) {
+            return new RecycleBitmap(new ReuseNoCacheStrategy());
+        }
+        switch (cacheNum) {
+            case 1:
+                return new RecycleBitmap(new ReuseOnceCacheStrategy());
+            default:
+                return new RecycleBitmap(new ReuseCustomerCacheStrategy(cacheNum));
+        }
+    }
 
     public static RecycleBitmap newInstance() {
         return newInstance(REUSE_ONCE_CACHE_STRATEGY);
@@ -47,45 +59,50 @@ public class RecycleBitmap {
         this.reuseStrategy = reuseManager;
     }
 
-    public void recycle(int uuid) {
+    public synchronized void recycle(int uuid) {
         reuseStrategy.recycle(uuid);
     }
 
-    public void destroy() {
+    public synchronized void destroy() {
         reuseStrategy.destroy();
     }
 
 
-    public void setImageForViewOnPost(final ImageView view, final Builder builder) {
+    public synchronized void setImageForViewOnPost(final ImageView view, final MetaData metaData) {
         view.post(new Runnable() {
             @Override
             public void run() {
-                if (builder.needAsync) {
-                    new CreateBitmapTask(view, RecycleBitmap.this).execute(builder);
+                if (metaData.needAsync) {
+                    new CreateBitmapTask(view, RecycleBitmap.this).execute(metaData);
                 } else {
-                    view.setImageBitmap(builder.createBitmap(RecycleBitmap.this));
+                    view.setImageBitmap(createBitmap(metaData));
                 }
             }
         });
     }
 
-    public Bitmap createBitmap(Builder builder) {
-        CakeBitmap cakeBitmap = reuseStrategy.OnSelector(new MetaData(builder));
+    public synchronized Bitmap createBitmap(MetaData metaData) {
+        if (checkAndInitOptions(metaData)) {
+            Log.d(TAG, "onInputStream == null or onInputStream.getInputStream() == null");
+            return null;
+        }
+
+        CakeBitmap cakeBitmap = reuseStrategy.OnSelector(metaData);
         if (cakeBitmap == null) {
-            cakeBitmap = new CakeBitmap(builder.getUuid());
+            throw new NullPointerException("method Strategy.OnSelector() Can't return null !!!");
         }
         return createBitmap(cakeBitmap,
-                createOptions(builder),
-                builder.getOnInputStream(),
-                builder.getUuid());
+                metaData.options,
+                metaData.onInputStream,
+                metaData.uuid);
     }
 
-    private BitmapFactory.Options createOptions(Builder builder) {
-        return Tools.getOptions(builder.getWidth(),
-                builder.getHeight(),
-                builder.isOverturn(),
-                builder.getOnInputStream().getInputStream(),
-                builder.getBitmapConfig());
+    private boolean checkAndInitOptions(MetaData builder) {
+        if (builder.onInputStream == null || builder.onInputStream.getInputStream() == null) {
+            return true;
+        }
+        builder.initOptions();
+        return false;
     }
 
     private Bitmap createBitmap(CakeBitmap cakeBitmap, BitmapFactory.Options options, OnInputStream onInputStream, int uuid) {
@@ -138,30 +155,32 @@ public class RecycleBitmap {
     }
 
 
-    public static class Builder {
+    public static class MetaData {
 
-        private OnInputStream onInputStream;
-        private int height;
-        private int width;
-        private int uuid;
-        private boolean overturn;
-        private boolean needAsync;
-        private Bitmap.Config bitmapConfig = Bitmap.Config.RGB_565;
-        private Map<Object, Object> metadata;
+        OnInputStream onInputStream;
+        int height;
+        int width;
+        int uuid;
+        boolean overturn;
+        boolean needAsync;
+        Bitmap.Config bitmapConfig = Bitmap.Config.RGB_565;
+        Map<Object, Object> metadata;
+        BitmapFactory.Options options;
 
-        public Builder(ImageView imageView) {
-            uuid = imageView.hashCode();
-            height = imageView.getHeight();
-            width = imageView.getWidth();
+        int realHeight;
+        int realWidth;
+
+        public MetaData(ImageView imageView) {
+            this(imageView.getHeight(), imageView.getWidth(), imageView.hashCode());
         }
 
-        public Builder(int height, int width, int uuid) {
+        public MetaData(int height, int width, int uuid) {
             this.height = height;
             this.width = width;
             this.uuid = uuid;
         }
 
-        public Builder addSource(final Context context, final int drawableId) {
+        public MetaData addSource(final Context context, final int drawableId) {
             onInputStream = new OnInputStream() {
                 @Override
                 public InputStream getInputStream() {
@@ -171,7 +190,7 @@ public class RecycleBitmap {
             return this;
         }
 
-        public Builder addSource(final String path) {
+        public MetaData addSource(final String path) {
             onInputStream = new OnInputStream() {
                 @Override
                 public InputStream getInputStream() {
@@ -186,27 +205,32 @@ public class RecycleBitmap {
             return this;
         }
 
-        public Builder setUuid(int uuid) {
+        public MetaData addSource(OnInputStream onInputStream) {
+            this.onInputStream = onInputStream;
+            return this;
+        }
+
+        public MetaData setUuid(int uuid) {
             this.uuid = uuid;
             return this;
         }
 
-        public Builder setBitmapConfig(Bitmap.Config bitmapConfig) {
+        public MetaData setBitmapConfig(Bitmap.Config bitmapConfig) {
             this.bitmapConfig = bitmapConfig;
             return this;
         }
 
-        public Builder needOverturn(boolean overturn) {
+        public MetaData needOverturn(boolean overturn) {
             this.overturn = overturn;
             return this;
         }
 
-        public Builder needAsync(boolean needAsync) {
+        public MetaData needAsync(boolean needAsync) {
             this.needAsync = needAsync;
             return this;
         }
 
-        public Builder putMetadata(Object key, Object value) {
+        public MetaData putMetadata(Object key, Object value) {
             if (metadata == null) {
                 metadata = new LinkedHashMap<>();
             }
@@ -214,44 +238,72 @@ public class RecycleBitmap {
             return this;
         }
 
-        Map<Object, Object> getMetadata() {
-            return metadata;
-        }
-
-        OnInputStream getOnInputStream() {
+        public OnInputStream getOnInputStream() {
             return onInputStream;
         }
 
-        int getHeight() {
-            return height;
-        }
-
-        int getWidth() {
-            return width;
-        }
-
-        int getUuid() {
+        public int getUuid() {
             return uuid;
         }
 
-        boolean isOverturn() {
+        public boolean isOverturn() {
             return overturn;
         }
 
-        boolean isNeedAsync() {
+        public boolean isNeedAsync() {
             return needAsync;
         }
 
-        Bitmap.Config getBitmapConfig() {
+        public Bitmap.Config getBitmapConfig() {
             return bitmapConfig;
         }
 
-        protected Bitmap createBitmap(RecycleBitmap recycleBitmap) {
-            if (onInputStream == null || onInputStream.getInputStream() == null) {
-                Log.d(TAG, "no source or invalid source");
+        public Object getMetadata(Object key) {
+            if (metadata == null) {
                 return null;
             }
-            return recycleBitmap.createBitmap(this);
+            return metadata.get(key);
+        }
+
+        public int getRealHeight() {
+            return realHeight;
+        }
+
+        public int getRealWidth() {
+            return realWidth;
+        }
+
+        protected void initOptions() {
+            options = new BitmapFactory.Options();
+            options.inPreferredConfig = bitmapConfig;
+            options.inMutable = true;
+            if (width == 0) {
+                return;
+            }
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(onInputStream.getInputStream(), null, options);
+            int outHeight, outWidth;
+            if (overturn) {
+                outWidth = options.outWidth;
+                outHeight = options.outHeight;
+            } else {
+                outHeight = options.outWidth;
+                outWidth = options.outHeight;
+            }
+
+            int scale = 1;
+            while (true) {
+                if (outWidth / 2 < width || outHeight / 2 < height) {
+                    break;
+                }
+                outWidth /= 2;
+                outHeight /= 2;
+                scale *= 2;
+            }
+            this.realHeight = options.outHeight /= scale;
+            this.realWidth = options.outWidth /= scale;
+            options.inJustDecodeBounds = false;
+            options.inSampleSize = scale;
         }
     }
 }

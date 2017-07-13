@@ -6,6 +6,6 @@ import java.io.InputStream;
  * Created by lizhaoxuan on 2017/7/12.
  */
 
-interface OnInputStream {
+public interface OnInputStream {
     InputStream getInputStream();
 }

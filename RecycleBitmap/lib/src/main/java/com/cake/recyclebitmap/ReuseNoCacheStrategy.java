@@ -9,17 +9,17 @@ import android.graphics.Bitmap;
 public class ReuseNoCacheStrategy extends AbstractReuseStrategy<CakeBitmap> {
 
     @Override
-    protected CakeBitmap OnSelector(MetaData metaData) {
+    protected CakeBitmap OnSelector(RecycleBitmap.MetaData metaData) {
         CakeBitmap cakeBitmap = getCakeMap().get(metaData.getUuid());
         if (cakeBitmap == null) {
-            cakeBitmap = new CakeBitmap(metaData.getUuid());
+            cakeBitmap = new CakeBitmap(metaData);
         }
         return cakeBitmap;
     }
 
     @Override
     protected void put(Bitmap result, CakeBitmap cakeBitmap, int uuid, boolean reuseSuccess) {
-        cakeBitmap.bitmap = result;
+        cakeBitmap.setBitmap(result);
         getCakeMap().put(uuid, cakeBitmap);
     }
 

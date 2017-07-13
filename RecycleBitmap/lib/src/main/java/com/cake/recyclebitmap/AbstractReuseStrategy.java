@@ -1,6 +1,7 @@
 package com.cake.recyclebitmap;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -13,7 +14,7 @@ public abstract class AbstractReuseStrategy<T extends CakeBitmap> {
 
     private Map<Integer, T> cakeMap;
 
-    protected abstract T OnSelector(MetaData metaData);
+    protected abstract T OnSelector(RecycleBitmap.MetaData metaData);
 
     protected abstract void put(Bitmap result, T cakeBitmap, int uuid, boolean reuseSuccess);
 
@@ -33,6 +34,15 @@ public abstract class AbstractReuseStrategy<T extends CakeBitmap> {
             cakeMap = new LinkedHashMap<>();
         }
         return cakeMap;
+    }
+
+
+    protected boolean canReuse(CakeBitmap cakeBitmap, RecycleBitmap.MetaData metaData) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            return cakeBitmap.getHeight() >= metaData.getRealHeight() && cakeBitmap.getWidth() >= metaData.getRealWidth();
+        } else {
+            return cakeBitmap.getHeight() == metaData.getRealHeight() && cakeBitmap.getWidth() == metaData.getRealWidth();
+        }
     }
 
 }
