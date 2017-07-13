@@ -115,6 +115,7 @@ public class RecycleBitmap {
             if (result == null) {
                 result = createBitmapForByte(onInputStream, options);
             }
+            Log.d(TAG, "复用成功");
         } catch (IllegalArgumentException e) {
             Log.d(TAG, "复用失败：" + e.getMessage());
             reuseSuccess = false;

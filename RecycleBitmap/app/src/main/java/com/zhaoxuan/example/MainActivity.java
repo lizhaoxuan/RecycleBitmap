@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         findViewById(R.id.takePhotoBtn).setOnClickListener(this);
         findViewById(R.id.seeBigBtn).setOnClickListener(this);
+        findViewById(R.id.viewPagerBtn).setOnClickListener(this);
     }
 
     @Override
@@ -25,6 +26,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.seeBigBtn:
                 startActivity(SeeBigActivity.class);
+                break;
+            case R.id.viewPagerBtn:
+                startActivity(ViewPagerActivity.class);
                 break;
         }
     }

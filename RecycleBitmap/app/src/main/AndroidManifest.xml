@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".TakePhotoActivity" />
-        <activity android:name=".SeeBigActivity"></activity>
+        <activity android:name=".SeeBigActivity" />
+        <activity android:name=".ViewPagerActivity"></activity>
     </application>
 
 </manifest>
