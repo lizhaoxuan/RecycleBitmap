@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import com.cake.recyclebitmap.RecycleBitmap;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class TakePhotoActivity extends AppCompatActivity {
     private ImageView photoImg;
@@ -35,7 +37,11 @@ public class TakePhotoActivity extends AppCompatActivity {
         photoImg = (ImageView) findViewById(R.id.photo_img);
         takeBtn = (Button) findViewById(R.id.take_btn);
 
-        recycleBitmap.setImageForViewOnPost(photoImg, R.drawable.example);
+        if (getIntent().getBooleanExtra("RecycleBitmap", false)) {
+            recycleBitmap.setImageForViewOnPost(photoImg, R.drawable.example);
+        } else {
+            photoImg.setImageResource(R.drawable.example);
+        }
 
         takeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +61,14 @@ public class TakePhotoActivity extends AppCompatActivity {
         }
         BitmapFactory.Options o = new BitmapFactory.Options();
         o.inJustDecodeBounds = true;
-
-        photoImg.setImageBitmap(recycleBitmap.createBitmap(photoImg, fileUri.getPath()));
+        if (getIntent().getBooleanExtra("RecycleBitmap", false)) {
+            photoImg.setImageBitmap(recycleBitmap.createBitmap(photoImg, fileUri.getPath()));
+        } else {
+            try {
+                photoImg.setImageBitmap(BitmapFactory.decodeStream(new FileInputStream(fileUri.getPath())));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

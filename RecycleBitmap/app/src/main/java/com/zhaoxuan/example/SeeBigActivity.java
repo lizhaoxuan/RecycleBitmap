@@ -41,10 +41,19 @@ public class SeeBigActivity extends AppCompatActivity {
         //注册监听事件
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                imageView.setImageBitmap(recycleBitmap.createBitmap(imageView, getDatas(position)));
+                setImageView(position);
                 imageView.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    private void setImageView(int position) {
+        if (getIntent().getBooleanExtra("RecycleBitmap", false)) {
+            imageView.setImageBitmap(recycleBitmap.createBitmap(imageView, getDatas(position)));
+        } else {
+            byte[] data = getDatas(position);
+            imageView.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, data.length));
+        }
     }
 
     private byte[] getDatas(final int index) {

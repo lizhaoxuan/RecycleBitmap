@@ -11,18 +11,36 @@
         android:id="@+id/takePhotoBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="takePhotoBtn" />
+        android:text="普通拍照" />
+
+    <Button
+        android:id="@+id/takePhotoRecycleBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="使用RecycleBitmap拍照" />
 
     <Button
         android:id="@+id/seeBigBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="seeBigBtn" />
+        android:text="普通查看大图" />
+
+    <Button
+        android:id="@+id/seeBigRecycleBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="使用RecycleBitmap查看大图" />
 
     <Button
         android:id="@+id/viewPagerBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="viewPagerBtn" />
+        android:text="普通ViewPager" />
+
+    <Button
+        android:id="@+id/viewPagerRecycleBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="使用RecycleBitmap ViewPager" />
 
 </LinearLayout>

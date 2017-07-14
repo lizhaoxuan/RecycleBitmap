@@ -1,5 +1,6 @@
 package com.zhaoxuan.example;
 
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -56,10 +57,14 @@ public class ViewPagerActivity extends AppCompatActivity {
             imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
-            imageView.setImageBitmap(recycleBitmap.createBitmap(
-                    new MetaData(imageView)
-                            .setSource(getInputStream(position))
-                            .setUuid(position % 3)));
+            if (getIntent().getBooleanExtra("RecycleBitmap", false)) {
+                imageView.setImageBitmap(recycleBitmap.createBitmap(
+                        new MetaData(imageView)
+                                .setSource(getInputStream(position))
+                                .setUuid(position % 3)));
+            } else {
+                imageView.setImageBitmap(BitmapFactory.decodeStream(getInputStream(position).getInputStream()));
+            }
 
             imageView.setOnClickListener(this);
             container.addView(imageView);
