@@ -9,7 +9,7 @@ public class ReuseOnceCacheStrategy extends AbstractReuseStrategy<CakeBitmap> {
     private static final int RECYCLE_BITMAP_KEY = -1;
 
     @Override
-    public CakeBitmap OnSelector(RecycleBitmap.MetaData metaData) {
+    public CakeBitmap OnSelector(MetaData metaData) {
         CakeBitmap cakeBitmap = getCakeMap().get(metaData.getUuid());
         if (cakeBitmap == null) {
             //尝试利用最近废弃的一个CakeBitmap

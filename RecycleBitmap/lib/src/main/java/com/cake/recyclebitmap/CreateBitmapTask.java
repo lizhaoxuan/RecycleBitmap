@@ -10,7 +10,7 @@ import java.lang.ref.WeakReference;
  * Created by lizhaoxuan on 2017/7/12.
  */
 
-class CreateBitmapTask extends AsyncTask<RecycleBitmap.MetaData, Integer, Bitmap> {
+class CreateBitmapTask extends AsyncTask<MetaData, Integer, Bitmap> {
 
     private WeakReference<ImageView> imageViewWeakReference;
     private WeakReference<RecycleBitmap> recycleBitmapWeakReference;
@@ -21,7 +21,7 @@ class CreateBitmapTask extends AsyncTask<RecycleBitmap.MetaData, Integer, Bitmap
     }
 
     @Override
-    protected Bitmap doInBackground(RecycleBitmap.MetaData... params) {
+    protected Bitmap doInBackground(MetaData... params) {
         RecycleBitmap recycleBitmap = recycleBitmapWeakReference.get();
         if (recycleBitmap != null && params.length > 0 && params[0] != null) {
             return recycleBitmap.createBitmap(params[0]);

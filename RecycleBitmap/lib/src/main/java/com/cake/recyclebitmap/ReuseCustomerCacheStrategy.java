@@ -19,7 +19,7 @@ public class ReuseCustomerCacheStrategy extends AbstractReuseStrategy<CakeBitmap
     }
 
     @Override
-    protected CakeBitmap OnSelector(RecycleBitmap.MetaData metaData) {
+    protected CakeBitmap OnSelector(MetaData metaData) {
         CakeBitmap cakeBitmap = getCakeMap().get(metaData.getUuid());
         if (cakeBitmap == null) {
             //尝试利用最近废弃的一个CakeBitmap
@@ -31,7 +31,7 @@ public class ReuseCustomerCacheStrategy extends AbstractReuseStrategy<CakeBitmap
         return cakeBitmap;
     }
 
-    private CakeBitmap checkCacheQueue(RecycleBitmap.MetaData metaData) {
+    private CakeBitmap checkCacheQueue(MetaData metaData) {
         if (getQueue().size() == 0) {
             return null;
         }

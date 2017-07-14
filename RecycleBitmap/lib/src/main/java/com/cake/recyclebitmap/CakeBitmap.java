@@ -14,7 +14,7 @@ public class CakeBitmap {
 
     private int key;
 
-    public CakeBitmap(RecycleBitmap.MetaData metaData) {
+    public CakeBitmap(MetaData metaData) {
         this.key = metaData.getUuid();
         this.width = metaData.getRealWidth();
         this.height = metaData.getRealHeight();

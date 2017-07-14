@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.cake.recyclebitmap.MetaData;
 import com.cake.recyclebitmap.OnInputStream;
 import com.cake.recyclebitmap.RecycleBitmap;
 
@@ -44,11 +45,15 @@ public class SeeBigActivity extends AppCompatActivity {
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 imageView.setImageBitmap(recycleBitmap.createBitmap(
-                        new RecycleBitmap.MetaData(imageView)
-                                .addSource(getInputStream(position))));
+                        new MetaData(imageView)
+                                .setSource(getDatas(position))));
                 imageView.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    private byte[] getDatas(final int index) {
+        return Tools.readFile(this, "small/" + (index + 1) + ".png");
     }
 
     private OnInputStream getInputStream(final int index) {

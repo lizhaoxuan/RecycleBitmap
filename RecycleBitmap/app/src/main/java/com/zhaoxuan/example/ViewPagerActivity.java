@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.cake.recyclebitmap.MetaData;
 import com.cake.recyclebitmap.OnInputStream;
 import com.cake.recyclebitmap.RecycleBitmap;
 
@@ -57,8 +58,8 @@ public class ViewPagerActivity extends AppCompatActivity {
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
             imageView.setImageBitmap(recycleBitmap.createBitmap(
-                    new RecycleBitmap.MetaData(imageView)
-                            .addSource(getInputStream(position))
+                    new MetaData(imageView)
+                            .setSource(getInputStream(position))
                             .setUuid(position % 3)));
             imageView.setOnClickListener(this);
             container.addView(imageView);

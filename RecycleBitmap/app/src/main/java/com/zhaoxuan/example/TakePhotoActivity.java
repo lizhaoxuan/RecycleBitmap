@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.cake.recyclebitmap.MetaData;
 import com.cake.recyclebitmap.RecycleBitmap;
 
 import java.io.File;
@@ -36,9 +37,9 @@ public class TakePhotoActivity extends AppCompatActivity {
         photoImg = (ImageView) findViewById(R.id.photo_img);
         takeBtn = (Button) findViewById(R.id.take_btn);
 
-        recycleBitmap.setImageForViewOnPost(photoImg, new RecycleBitmap.MetaData(photoImg)
+        recycleBitmap.setImageForViewOnPost(photoImg, new MetaData(photoImg)
                 .needAsync(true)
-                .addSource(this, R.drawable.example));
+                .setSource(this, R.drawable.example));
 
 
         takeBtn.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +60,7 @@ public class TakePhotoActivity extends AppCompatActivity {
         o.inJustDecodeBounds = true;
 
         photoImg.setImageBitmap(recycleBitmap.createBitmap(
-                new RecycleBitmap.MetaData(photoImg)
-                        .addSource(fileUri.getPath())));
+                new MetaData(photoImg)
+                        .setSource(fileUri.getPath())));
     }
 }
