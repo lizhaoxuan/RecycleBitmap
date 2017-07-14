@@ -3,7 +3,7 @@ package com.cake.recyclebitmap;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.widget.ImageView;
+import android.view.View;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -33,7 +33,7 @@ public class MetaData {
     int realHeight;
     int realWidth;
 
-    public MetaData(ImageView imageView) {
+    public MetaData(View imageView) {
         this(imageView.getHeight(), imageView.getWidth(), imageView.hashCode());
     }
 

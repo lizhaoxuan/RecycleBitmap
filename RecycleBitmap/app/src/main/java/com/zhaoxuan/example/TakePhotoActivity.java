@@ -7,12 +7,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.cake.recyclebitmap.MetaData;
 import com.cake.recyclebitmap.RecycleBitmap;
 
 import java.io.File;
@@ -37,10 +35,7 @@ public class TakePhotoActivity extends AppCompatActivity {
         photoImg = (ImageView) findViewById(R.id.photo_img);
         takeBtn = (Button) findViewById(R.id.take_btn);
 
-        recycleBitmap.setImageForViewOnPost(photoImg, new MetaData(photoImg)
-                .needAsync(true)
-                .setSource(this, R.drawable.example));
-
+        recycleBitmap.setImageForViewOnPost(photoImg, R.drawable.example);
 
         takeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,12 +50,12 @@ public class TakePhotoActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("TAG", "resultCode:" + resultCode);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
         BitmapFactory.Options o = new BitmapFactory.Options();
         o.inJustDecodeBounds = true;
 
-        photoImg.setImageBitmap(recycleBitmap.createBitmap(
-                new MetaData(photoImg)
-                        .setSource(fileUri.getPath())));
+        photoImg.setImageBitmap(recycleBitmap.createBitmap(photoImg, fileUri.getPath()));
     }
 }

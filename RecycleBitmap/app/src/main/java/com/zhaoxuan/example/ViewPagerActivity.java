@@ -18,15 +18,14 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class ViewPagerActivity extends AppCompatActivity {
-
-    private ViewPager viewPager;
+    private static final String TAG = ViewPagerActivity.class.getSimpleName();
     private RecycleBitmap recycleBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pager);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         viewPager.setAdapter(new MyAdapter());
         recycleBitmap = RecycleBitmap.newInstance(RecycleBitmap.REUSE_ONCE_CACHE_STRATEGY);
     }
@@ -47,12 +46,12 @@ public class ViewPagerActivity extends AppCompatActivity {
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((View) object);
             recycleBitmap.recycle(position % 3);
-            Log.d("TAG", "destroyItem:" + position + "   " + (position % 3));
+            Log.d(TAG, "destroyItem:" + position + "   " + (position % 3));
         }
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            Log.d("TAG", "instantiateItem:" + position + "   " + (position % 3));
+            Log.d(TAG, "instantiateItem:" + position + "   " + (position % 3));
             ImageView imageView = new ImageView(ViewPagerActivity.this);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -61,6 +60,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                     new MetaData(imageView)
                             .setSource(getInputStream(position))
                             .setUuid(position % 3)));
+
             imageView.setOnClickListener(this);
             container.addView(imageView);
             return imageView;

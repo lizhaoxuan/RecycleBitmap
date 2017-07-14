@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
  * Created by lizhaoxuan on 2017/7/12.
  */
 public class ReuseOnceCacheStrategy extends AbstractReuseStrategy<CakeBitmap> {
-    private static final int RECYCLE_BITMAP_KEY = -1;
+    private final int RECYCLE_BITMAP_KEY = this.hashCode();
 
     @Override
     public CakeBitmap OnSelector(MetaData metaData) {

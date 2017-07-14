@@ -11,12 +11,9 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.cake.recyclebitmap.MetaData;
-import com.cake.recyclebitmap.OnInputStream;
 import com.cake.recyclebitmap.RecycleBitmap;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 public class SeeBigActivity extends AppCompatActivity {
 
@@ -44,9 +41,7 @@ public class SeeBigActivity extends AppCompatActivity {
         //注册监听事件
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                imageView.setImageBitmap(recycleBitmap.createBitmap(
-                        new MetaData(imageView)
-                                .setSource(getDatas(position))));
+                imageView.setImageBitmap(recycleBitmap.createBitmap(imageView, getDatas(position)));
                 imageView.setVisibility(View.VISIBLE);
             }
         });
@@ -54,20 +49,6 @@ public class SeeBigActivity extends AppCompatActivity {
 
     private byte[] getDatas(final int index) {
         return Tools.readFile(this, "small/" + (index + 1) + ".png");
-    }
-
-    private OnInputStream getInputStream(final int index) {
-        return new OnInputStream() {
-            @Override
-            public InputStream getInputStream() {
-                try {
-                    return getResources().getAssets().open("small/" + (index + 1) + ".png");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-        };
     }
 
     class MyAdapter extends BaseAdapter {

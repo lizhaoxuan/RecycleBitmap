@@ -1,17 +1,10 @@
 package com.cake.recyclebitmap;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Created by lizhaoxuan on 2017/7/11.
@@ -67,6 +60,29 @@ public class RecycleBitmap {
         reuseStrategy.destroy();
     }
 
+    public synchronized void setImageForViewOnPost(ImageView imageView, String picPath) {
+        setImageForViewOnPost(imageView, picPath, imageView.hashCode(), false);
+    }
+
+    public synchronized void setImageForViewOnPost(ImageView imageView, String picPath, int uuid, boolean needAsync) {
+        setImageForViewOnPost(imageView, new MetaData(imageView).setSource(picPath).setUuid(uuid).needAsync(needAsync));
+    }
+
+    public synchronized void setImageForViewOnPost(ImageView imageView, byte[] picData) {
+        setImageForViewOnPost(imageView, picData, imageView.hashCode(), false);
+    }
+
+    public synchronized void setImageForViewOnPost(ImageView imageView, byte[] picData, int uuid, boolean needAsync) {
+        setImageForViewOnPost(imageView, new MetaData(imageView).setSource(picData).setUuid(uuid).needAsync(needAsync));
+    }
+
+    public synchronized void setImageForViewOnPost(ImageView imageView, int picId) {
+        setImageForViewOnPost(imageView, picId, imageView.hashCode(), false);
+    }
+
+    public synchronized void setImageForViewOnPost(ImageView imageView, int picId, int uuid, boolean needAsync) {
+        setImageForViewOnPost(imageView, new MetaData(imageView).setSource(imageView.getContext(), picId).setUuid(uuid).needAsync(needAsync));
+    }
 
     public synchronized void setImageForViewOnPost(final ImageView view, final MetaData metaData) {
         view.post(new Runnable() {
@@ -80,6 +96,31 @@ public class RecycleBitmap {
             }
         });
     }
+
+    public synchronized Bitmap createBitmap(View imageView, String picPath) {
+        return createBitmap(imageView, picPath, imageView.hashCode());
+    }
+
+    public synchronized Bitmap createBitmap(View imageView, String picPath, int uuid) {
+        return createBitmap(new MetaData(imageView).setSource(picPath).setUuid(uuid));
+    }
+
+    public synchronized Bitmap createBitmap(View imageView, byte[] picData) {
+        return createBitmap(imageView, picData, imageView.hashCode());
+    }
+
+    public synchronized Bitmap createBitmap(View imageView, byte[] picData, int uuid) {
+        return createBitmap(new MetaData(imageView).setSource(picData).setUuid(uuid));
+    }
+
+    public synchronized Bitmap createBitmap(View imageView, int picId) {
+        return createBitmap(imageView, picId, imageView.hashCode());
+    }
+
+    public synchronized Bitmap createBitmap(View imageView, int picId, int uuid) {
+        return createBitmap(new MetaData(imageView).setSource(imageView.getContext(), picId).setUuid(uuid));
+    }
+
 
     public synchronized Bitmap createBitmap(MetaData metaData) {
         if (checkAndInitOptions(metaData)) {
