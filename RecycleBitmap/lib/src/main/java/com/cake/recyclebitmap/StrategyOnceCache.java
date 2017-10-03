@@ -3,9 +3,12 @@ package com.cake.recyclebitmap;
 import android.graphics.Bitmap;
 
 /**
+ * 一个缓存的策略
+ * 调用recycle方法后，不会立刻释放该图片的引用，将会缓存起来以备复用
+ * 在新创建Bitmap时，将会尝试复用这个被收回的图片引用
  * Created by lizhaoxuan on 2017/7/12.
  */
-public class ReuseOnceCacheStrategy extends AbstractReuseStrategy<CakeBitmap> {
+public class StrategyOnceCache extends AbstractReuseStrategy<CakeBitmap> {
     private final int RECYCLE_BITMAP_KEY = this.hashCode();
 
     @Override
@@ -26,7 +29,7 @@ public class ReuseOnceCacheStrategy extends AbstractReuseStrategy<CakeBitmap> {
         if (reuseSuccess) {
             cakeBitmap.setBitmap(result);
             getCakeMap().put(uuid, cakeBitmap);
-            if (cakeBitmap.getKey() != uuid) {
+            if (cakeBitmap.getUuid() != uuid) {
                 //uuid不同，说明利用了以废弃的一个cakeBitmap,此时将其踢出Map
                 getCakeMap().put(RECYCLE_BITMAP_KEY, null);
             }
@@ -45,7 +48,7 @@ public class ReuseOnceCacheStrategy extends AbstractReuseStrategy<CakeBitmap> {
         if (cakeBitmap == null) {
             return;
         }
-        cakeBitmap.setKey(RECYCLE_BITMAP_KEY);
+        cakeBitmap.setUuid(RECYCLE_BITMAP_KEY);
 
         getCakeMap().put(RECYCLE_BITMAP_KEY, cakeBitmap);
         getCakeMap().put(uuid, null);

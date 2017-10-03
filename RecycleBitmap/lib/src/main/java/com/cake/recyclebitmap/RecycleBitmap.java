@@ -2,7 +2,6 @@ package com.cake.recyclebitmap;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -11,8 +10,8 @@ import android.widget.ImageView;
  */
 
 public class RecycleBitmap {
-    public static final int REUSE_NO_CACHE_STRATEGY = -10;
-    public static final int REUSE_ONCE_CACHE_STRATEGY = -11;
+    public static final int STRATEGY_NO_CACHE = -10;
+    public static final int STRATEGY_ONCE_CACHE = -11;
 
     private static final String TAG = RecycleBitmap.class.getSimpleName();
 
@@ -20,27 +19,27 @@ public class RecycleBitmap {
 
     public static RecycleBitmap newInstanceCustomerCache(int cacheNum) {
         if (cacheNum <= 0) {
-            return new RecycleBitmap(new ReuseNoCacheStrategy());
+            return new RecycleBitmap(new StrategyNoCache());
         }
         switch (cacheNum) {
             case 1:
-                return new RecycleBitmap(new ReuseOnceCacheStrategy());
+                return new RecycleBitmap(new StrategyOnceCache());
             default:
-                return new RecycleBitmap(new ReuseCustomerCacheStrategy(cacheNum));
+                return new RecycleBitmap(new StrategyCustomerCache(cacheNum));
         }
     }
 
     public static RecycleBitmap newInstance() {
-        return newInstance(REUSE_ONCE_CACHE_STRATEGY);
+        return newInstance(STRATEGY_ONCE_CACHE);
     }
 
     public static RecycleBitmap newInstance(int strategyType) {
         switch (strategyType) {
-            case REUSE_NO_CACHE_STRATEGY:
-                return new RecycleBitmap(new ReuseNoCacheStrategy());
-            case REUSE_ONCE_CACHE_STRATEGY:
+            case STRATEGY_NO_CACHE:
+                return new RecycleBitmap(new StrategyNoCache());
+            case STRATEGY_ONCE_CACHE:
             default:
-                return new RecycleBitmap(new ReuseOnceCacheStrategy());
+                return new RecycleBitmap(new StrategyOnceCache());
         }
     }
 
@@ -50,6 +49,10 @@ public class RecycleBitmap {
 
     private RecycleBitmap(AbstractReuseStrategy reuseManager) {
         this.reuseStrategy = reuseManager;
+    }
+
+    public void getTest(String msg) {
+        RLog.i(msg);
     }
 
     public synchronized void recycle(int uuid) {
@@ -124,7 +127,7 @@ public class RecycleBitmap {
 
     public synchronized Bitmap createBitmap(MetaData metaData) {
         if (checkAndInitOptions(metaData)) {
-            Log.d(TAG, "onInputStream == null or onInputStream.getInputStream() == null");
+            RLog.i("onInputStream == null or onInputStream.getInputStream() == null");
             return null;
         }
 
@@ -156,16 +159,16 @@ public class RecycleBitmap {
             if (result == null) {
                 result = createBitmapForByte(onInputStream, options);
             }
-            Log.d(TAG, "复用成功");
+            RLog.i("createBitmap -- reuse success");
         } catch (IllegalArgumentException e) {
-            Log.d(TAG, "复用失败：" + e.getMessage());
+            RLog.i("createBitmap -- error:" + e.getMessage());
             reuseSuccess = false;
             //复用失败重新创建
             result = newCakeAndRecycleOld(onInputStream, options);
         }
 
         if (result == null) {
-            Log.d(TAG, "解码失败，return null");
+            RLog.i("createBitmap -- decode failure，return null");
             return null;
         }
 
@@ -179,18 +182,21 @@ public class RecycleBitmap {
      */
     private Bitmap newCakeAndRecycleOld(OnInputStream onInputStream, BitmapFactory.Options options) {
         options.inBitmap = null;
-        Log.d(TAG, "复用失败，newCakeBitmap");
+        RLog.i("newCakeAndRecycleOld -- reuse failure，so newCakeBitmap");
         Bitmap result;
         result = BitmapFactory.decodeStream(onInputStream.getInputStream(), null, options);
         if (result == null) {
+            RLog.i("newCakeAndRecycleOld -- result == null try createBitmapForByte");
             return createBitmapForByte(onInputStream, options);
         }
         return result;
     }
 
     private Bitmap createBitmapForByte(OnInputStream onInputStream, BitmapFactory.Options options) throws IllegalArgumentException {
+        RLog.i("createBitmapForByte -- BitmapFactory.decodeStream failure，try BitmapFactory.decodeByteArray");
         byte[] data = Tools.inputStreamToByte(onInputStream);
         if (data == null || data.length == 0) {
+            RLog.i("createBitmapForByte -- data = null ,so return null");
             return null;
         }
         return BitmapFactory.decodeByteArray(data, 0, data.length, options);

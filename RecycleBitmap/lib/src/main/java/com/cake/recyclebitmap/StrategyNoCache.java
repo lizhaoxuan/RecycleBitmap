@@ -3,10 +3,11 @@ package com.cake.recyclebitmap;
 import android.graphics.Bitmap;
 
 /**
+ * 无缓存策略
+ * 只能复用当前正在使用的图片内存
  * Created by lizhaoxuan on 2017/7/12.
  */
-
-public class ReuseNoCacheStrategy extends AbstractReuseStrategy<CakeBitmap> {
+public class StrategyNoCache extends AbstractReuseStrategy<CakeBitmap> {
 
     @Override
     protected CakeBitmap OnSelector(MetaData metaData) {

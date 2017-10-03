@@ -28,7 +28,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_pager);
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         viewPager.setAdapter(new MyAdapter());
-        recycleBitmap = RecycleBitmap.newInstance(RecycleBitmap.REUSE_ONCE_CACHE_STRATEGY);
+        recycleBitmap = RecycleBitmap.newInstance(RecycleBitmap.STRATEGY_ONCE_CACHE);
     }
 
     class MyAdapter extends PagerAdapter implements View.OnClickListener {

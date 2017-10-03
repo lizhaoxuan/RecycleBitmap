@@ -7,9 +7,11 @@ import android.widget.ImageView;
 import java.lang.ref.WeakReference;
 
 /**
+ * 异步创建BitmapTask
+ * Activity刚启动时createBitmap，弱View未创建完成，无法获取长宽，无法根据View大小对图片进行压缩
+ * 此时需要借助异步Task创建
  * Created by lizhaoxuan on 2017/7/12.
  */
-
 class CreateBitmapTask extends AsyncTask<MetaData, Integer, Bitmap> {
 
     private WeakReference<ImageView> imageViewWeakReference;

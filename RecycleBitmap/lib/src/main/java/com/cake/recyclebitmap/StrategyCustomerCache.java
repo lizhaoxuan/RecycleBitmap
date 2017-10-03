@@ -5,16 +5,18 @@ import android.graphics.Bitmap;
 import java.util.LinkedList;
 
 /**
+ * 可以自定义缓存个数的的策略，默认两个
+ * 回收时，如果当前缓存未满，加入缓存队列，如果缓存已满，踢出队尾缓存，加入缓存队列
+ * 创建时，会遍历所有缓存队列寻找可符合复用条件的缓存进行复用
  * Created by lizhaoxuan on 2017/7/13.
  */
-
-public class ReuseCustomerCacheStrategy extends AbstractReuseStrategy<CakeBitmap> {
+public class StrategyCustomerCache extends AbstractReuseStrategy<CakeBitmap> {
 
     private int RECYCLE_BITMAP_KEY = this.hashCode();
     private int cacheNum = 2;
     private LinkedList<CakeBitmap> cacheQueue;
 
-    public ReuseCustomerCacheStrategy(int cacheNum) {
+    public StrategyCustomerCache(int cacheNum) {
         this.cacheNum = cacheNum;
     }
 
@@ -47,7 +49,7 @@ public class ReuseCustomerCacheStrategy extends AbstractReuseStrategy<CakeBitmap
     protected void put(Bitmap result, CakeBitmap cakeBitmap, int uuid, boolean reuseSuccess) {
         if (reuseSuccess) {
             cakeBitmap.setBitmap(result);
-            if (cakeBitmap.getKey() != uuid) {
+            if (cakeBitmap.getUuid() != uuid) {
                 //uuid不同，说明利用了以废弃的一个cakeBitmap,此时将其踢出Map
                 getQueue().remove(cakeBitmap);
             }
@@ -69,7 +71,7 @@ public class ReuseCustomerCacheStrategy extends AbstractReuseStrategy<CakeBitmap
         if (getQueue().size() >= cacheNum) {
             getQueue().poll();
         }
-        cakeBitmap.setKey(RECYCLE_BITMAP_KEY);
+        cakeBitmap.setUuid(RECYCLE_BITMAP_KEY);
         getQueue().offer(cakeBitmap);
         getCakeMap().put(uuid, null);
     }

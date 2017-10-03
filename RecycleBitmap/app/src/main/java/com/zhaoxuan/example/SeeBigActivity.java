@@ -25,7 +25,7 @@ public class SeeBigActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_see_big);
-        recycleBitmap = RecycleBitmap.newInstance(RecycleBitmap.REUSE_NO_CACHE_STRATEGY);
+        recycleBitmap = RecycleBitmap.newInstance(RecycleBitmap.STRATEGY_NO_CACHE);
 
         imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setOnClickListener(new View.OnClickListener() {

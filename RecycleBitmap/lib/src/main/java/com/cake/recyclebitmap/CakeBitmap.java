@@ -12,27 +12,27 @@ public class CakeBitmap {
     protected int width;
     protected int height;
 
-    private int key;
+    private int uuid;
 
     public CakeBitmap(MetaData metaData) {
-        this.key = metaData.getUuid();
+        this.uuid = metaData.getUuid();
         this.width = metaData.getRealWidth();
         this.height = metaData.getRealHeight();
     }
 
     public CakeBitmap(Bitmap bitmap, int uuid) {
-        this.key = uuid;
+        this.uuid = uuid;
         this.width = bitmap.getWidth();
         this.height = bitmap.getHeight();
         this.bitmap = bitmap;
     }
 
-    public void setKey(int key) {
-        this.key = key;
+    public void setUuid(int uuid) {
+        this.uuid = uuid;
     }
 
-    public int getKey() {
-        return key;
+    public int getUuid() {
+        return uuid;
     }
 
     public int getWidth() {
