@@ -21,10 +21,18 @@ public class SeeBigActivity extends AppCompatActivity {
 
     private RecycleBitmap recycleBitmap;
 
+    private boolean isRecycleBitmap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_see_big);
+        isRecycleBitmap = getIntent().getBooleanExtra("RecycleBitmap", false);
+        if (isRecycleBitmap) {
+            setTitle("使用RecycleBitmap查看大图");
+        } else {
+            setTitle("普通查看大图");
+        }
         recycleBitmap = RecycleBitmap.newInstance(RecycleBitmap.STRATEGY_NO_CACHE);
 
         imageView = (ImageView) findViewById(R.id.imageView);
@@ -48,7 +56,7 @@ public class SeeBigActivity extends AppCompatActivity {
     }
 
     private void setImageView(int position) {
-        if (getIntent().getBooleanExtra("RecycleBitmap", false)) {
+        if (isRecycleBitmap) {
             imageView.setImageBitmap(recycleBitmap.createBitmap(imageView, getDatas(position)));
         } else {
             byte[] data = getDatas(position);

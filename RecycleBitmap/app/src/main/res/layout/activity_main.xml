@@ -7,40 +7,64 @@
     android:orientation="vertical"
     tools:context="com.zhaoxuan.example.MainActivity">
 
-    <Button
+    <TextView
         android:id="@+id/takePhotoBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="普通拍照" />
+        android:layout_margin="10dp"
+        android:background="@drawable/shape_button"
+        android:padding="10dp"
+        android:text="普通拍照"
+        android:textColor="#ffffff" />
 
-    <Button
+    <TextView
         android:id="@+id/takePhotoRecycleBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="使用RecycleBitmap拍照" />
+        android:layout_margin="10dp"
+        android:background="@drawable/shape_button"
+        android:padding="10dp"
+        android:text="使用RecycleBitmap拍照"
+        android:textColor="#ffffff" />
 
-    <Button
+    <TextView
         android:id="@+id/seeBigBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="普通查看大图" />
+        android:layout_margin="10dp"
+        android:background="@drawable/shape_button"
+        android:padding="10dp"
+        android:text="普通查看大图"
+        android:textColor="#ffffff" />
 
-    <Button
+    <TextView
         android:id="@+id/seeBigRecycleBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="使用RecycleBitmap查看大图" />
+        android:layout_margin="10dp"
+        android:background="@drawable/shape_button"
+        android:padding="10dp"
+        android:text="使用RecycleBitmap查看大图"
+        android:textColor="#ffffff" />
 
-    <Button
+    <TextView
         android:id="@+id/viewPagerBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="普通ViewPager" />
+        android:layout_margin="10dp"
+        android:background="@drawable/shape_button"
+        android:padding="10dp"
+        android:text="普通ViewPager"
+        android:textColor="#ffffff" />
 
-    <Button
+    <TextView
         android:id="@+id/viewPagerRecycleBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="使用RecycleBitmap ViewPager" />
+        android:layout_margin="10dp"
+        android:background="@drawable/shape_button"
+        android:padding="10dp"
+        android:text="使用RecycleBitmap ViewPager"
+        android:textColor="#ffffff" />
 
 </LinearLayout>

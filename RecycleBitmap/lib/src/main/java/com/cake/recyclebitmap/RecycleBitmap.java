@@ -182,11 +182,11 @@ public class RecycleBitmap {
      */
     private Bitmap newCakeAndRecycleOld(OnInputStream onInputStream, BitmapFactory.Options options) {
         options.inBitmap = null;
-        RLog.i("newCakeAndRecycleOld -- reuse failure，so newCakeBitmap");
+        RLog.i("newCakeAndRecycleOld -- reuse failure,so newCakeBitmap");
         Bitmap result;
         result = BitmapFactory.decodeStream(onInputStream.getInputStream(), null, options);
         if (result == null) {
-            RLog.i("newCakeAndRecycleOld -- result == null try createBitmapForByte");
+            RLog.i("newCakeAndRecycleOld -- result == null, try createBitmapForByte");
             return createBitmapForByte(onInputStream, options);
         }
         return result;

@@ -25,10 +25,18 @@ public class TakePhotoActivity extends AppCompatActivity {
 
     private Uri fileUri;
 
+    private boolean isRecycleBitmap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_photo);
+        isRecycleBitmap = getIntent().getBooleanExtra("RecycleBitmap", false);
+        if (isRecycleBitmap) {
+            setTitle("使用RecycleBitmap拍照");
+        } else {
+            setTitle("普通拍照");
+        }
         recycleBitmap = RecycleBitmap.newInstanceCustomerCache(2);
 
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
@@ -37,7 +45,7 @@ public class TakePhotoActivity extends AppCompatActivity {
         photoImg = (ImageView) findViewById(R.id.photo_img);
         takeBtn = (Button) findViewById(R.id.take_btn);
 
-        if (getIntent().getBooleanExtra("RecycleBitmap", false)) {
+        if (isRecycleBitmap) {
             recycleBitmap.setImageForViewOnPost(photoImg, R.drawable.example);
         } else {
             photoImg.setImageResource(R.drawable.example);
