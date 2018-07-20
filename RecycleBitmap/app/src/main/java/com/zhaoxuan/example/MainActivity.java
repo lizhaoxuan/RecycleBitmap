@@ -19,6 +19,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.takePhotoRecycleBtn).setOnClickListener(this);
         findViewById(R.id.seeBigRecycleBtn).setOnClickListener(this);
         findViewById(R.id.viewPagerRecycleBtn).setOnClickListener(this);
+        findViewById(R.id.listBtn).setOnClickListener(this);
+        findViewById(R.id.listRecycleBtn).setOnClickListener(this);
+        findViewById(R.id.guideBtn).setOnClickListener(this);
+        findViewById(R.id.guideRecycleBtn).setOnClickListener(this);
     }
 
     @Override
@@ -28,19 +32,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(TakePhotoActivity.class, false);
                 break;
             case R.id.seeBigBtn:
-                startActivity(SeeBigActivity.class, false);
+                startActivity(SeeSingleBigActivity.class, false);
                 break;
             case R.id.viewPagerBtn:
                 startActivity(ViewPagerActivity.class, false);
+                break;
+            case R.id.listBtn:
+                startActivity(ListActivity.class, false);
+                break;
+            case R.id.guideBtn:
+                startActivity(GuideActivity.class, false);
                 break;
             case R.id.takePhotoRecycleBtn:
                 startActivity(TakePhotoActivity.class, true);
                 break;
             case R.id.seeBigRecycleBtn:
-                startActivity(SeeBigActivity.class, true);
+                startActivity(SeeSingleBigActivity.class, true);
                 break;
             case R.id.viewPagerRecycleBtn:
                 startActivity(ViewPagerActivity.class, true);
+                break;
+            case R.id.listRecycleBtn:
+                startActivity(ListActivity.class, true);
+                break;
+            case R.id.guideRecycleBtn:
+                startActivity(GuideActivity.class, true);
                 break;
         }
     }

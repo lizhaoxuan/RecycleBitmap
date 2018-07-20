@@ -37,7 +37,7 @@ public class TakePhotoActivity extends AppCompatActivity {
         } else {
             setTitle("普通拍照");
         }
-        recycleBitmap = RecycleBitmap.newInstanceCustomerCache(2);
+        recycleBitmap = RecycleBitmap.newInstanceCustomerCache(1);
 
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
         File outputImage = new File(path, "oldTakePhoto.jpg");
@@ -69,7 +69,7 @@ public class TakePhotoActivity extends AppCompatActivity {
         }
         BitmapFactory.Options o = new BitmapFactory.Options();
         o.inJustDecodeBounds = true;
-        if (getIntent().getBooleanExtra("RecycleBitmap", false)) {
+        if (isRecycleBitmap) {
             photoImg.setImageBitmap(recycleBitmap.createBitmap(photoImg, fileUri.getPath()));
         } else {
             try {

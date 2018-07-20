@@ -1,70 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    tools:context="com.zhaoxuan.example.MainActivity">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/takePhotoBtn"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@drawable/shape_button"
-        android:padding="10dp"
-        android:text="普通拍照"
-        android:textColor="#ffffff" />
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:context="com.zhaoxuan.example.MainActivity">
 
-    <TextView
-        android:id="@+id/takePhotoRecycleBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@drawable/shape_button"
-        android:padding="10dp"
-        android:text="使用RecycleBitmap拍照"
-        android:textColor="#ffffff" />
+        <TextView
+            android:id="@+id/takePhotoBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_button"
+            android:padding="10dp"
+            android:text="普通拍照"
+            android:textColor="#ffffff" />
 
-    <TextView
-        android:id="@+id/seeBigBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@drawable/shape_button"
-        android:padding="10dp"
-        android:text="普通查看大图"
-        android:textColor="#ffffff" />
+        <TextView
+            android:id="@+id/takePhotoRecycleBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_button"
+            android:padding="10dp"
+            android:text="使用RecycleBitmap拍照"
+            android:textColor="#ffffff" />
 
-    <TextView
-        android:id="@+id/seeBigRecycleBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@drawable/shape_button"
-        android:padding="10dp"
-        android:text="使用RecycleBitmap查看大图"
-        android:textColor="#ffffff" />
+        <TextView
+            android:id="@+id/seeBigBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_button"
+            android:padding="10dp"
+            android:text="普通查看大图"
+            android:textColor="#ffffff" />
 
-    <TextView
-        android:id="@+id/viewPagerBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@drawable/shape_button"
-        android:padding="10dp"
-        android:text="普通ViewPager"
-        android:textColor="#ffffff" />
+        <TextView
+            android:id="@+id/seeBigRecycleBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_button"
+            android:padding="10dp"
+            android:text="使用RecycleBitmap查看大图"
+            android:textColor="#ffffff" />
 
-    <TextView
-        android:id="@+id/viewPagerRecycleBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@drawable/shape_button"
-        android:padding="10dp"
-        android:text="使用RecycleBitmap ViewPager"
-        android:textColor="#ffffff" />
+        <TextView
+            android:id="@+id/viewPagerBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_button"
+            android:padding="10dp"
+            android:text="普通ViewPager"
+            android:textColor="#ffffff" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/viewPagerRecycleBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_button"
+            android:padding="10dp"
+            android:text="使用RecycleBitmap ViewPager"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/listBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_button"
+            android:padding="10dp"
+            android:text="普通图片列表"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/listRecycleBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_button"
+            android:padding="10dp"
+            android:text="使用RecycleBitmap 图片列表"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/guideBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_button"
+            android:padding="10dp"
+            android:text="普通引导"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/guideRecycleBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_button"
+            android:padding="10dp"
+            android:text="使用RecycleBitmap 引导"
+            android:textColor="#ffffff" />
+
+    </LinearLayout>
+
+</ScrollView>
+
+

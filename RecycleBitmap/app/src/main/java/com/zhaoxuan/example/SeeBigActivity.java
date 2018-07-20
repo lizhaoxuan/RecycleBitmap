@@ -11,15 +11,15 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.cake.recyclebitmap.RecycleBitmap;
-
 import java.io.IOException;
+import java.io.InputStream;
 
 public class SeeBigActivity extends AppCompatActivity {
 
     private ImageView imageView;
 
-    private RecycleBitmap recycleBitmap;
+    //    private RecycleBitmap recycleBitmap;
+    private RecycleBitmapUtils recycleBitmapUtils;
 
     private boolean isRecycleBitmap;
 
@@ -33,7 +33,8 @@ public class SeeBigActivity extends AppCompatActivity {
         } else {
             setTitle("普通查看大图");
         }
-        recycleBitmap = RecycleBitmap.newInstance(RecycleBitmap.STRATEGY_NO_CACHE);
+//        recycleBitmap = RecycleBitmap.newInstance(RecycleBitmap.STRATEGY_NO_CACHE);
+        recycleBitmapUtils = RecycleBitmapUtils.newInstance();
 
         imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -55,9 +56,15 @@ public class SeeBigActivity extends AppCompatActivity {
         });
     }
 
-    private void setImageView(int position) {
+    private void setImageView(final int position) {
         if (isRecycleBitmap) {
-            imageView.setImageBitmap(recycleBitmap.createBitmap(imageView, getDatas(position)));
+            imageView.setImageBitmap(recycleBitmapUtils.createBitmap(new RecycleBitmapUtils.Builder(imageView)
+                    .addSource(new RecycleBitmapUtils.OnInputStream() {
+                        @Override
+                        public InputStream getInputStream() {
+                            return Tools.readFileInputStream(SeeBigActivity.this, "small/" + (position + 1) + ".png");
+                        }
+                    })));
         } else {
             byte[] data = getDatas(position);
             imageView.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, data.length));
@@ -76,7 +83,7 @@ public class SeeBigActivity extends AppCompatActivity {
         }
 
         public int getCount() {
-            return 9;
+            return 1;
         }
 
         public Object getItem(int item) {

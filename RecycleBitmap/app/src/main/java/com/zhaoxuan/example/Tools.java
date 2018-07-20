@@ -2,6 +2,7 @@ package com.zhaoxuan.example;
 
 import android.content.Context;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -23,6 +24,15 @@ public class Tools {
             in.close();
             return buffer;
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static InputStream readFileInputStream(Context context, String fileName) {
+        try {
+            return context.getResources().getAssets().open(fileName);
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;

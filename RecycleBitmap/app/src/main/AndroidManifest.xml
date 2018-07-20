@@ -21,7 +21,10 @@
         </activity>
         <activity android:name=".TakePhotoActivity" />
         <activity android:name=".SeeBigActivity" />
-        <activity android:name=".ViewPagerActivity"></activity>
+        <activity android:name=".ViewPagerActivity" />
+        <activity android:name=".ListActivity" />
+        <activity android:name=".SeeSingleBigActivity" />
+        <activity android:name=".GuideActivity"></activity>
     </application>
 
 </manifest>
